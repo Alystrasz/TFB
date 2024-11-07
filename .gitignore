@@ -6,3 +6,9 @@ result/
 *.DS_Store
 venv/
 **__pycache__/
+
+# venv
+pyvenv.cfg
+bin/
+lib/
+lib64
