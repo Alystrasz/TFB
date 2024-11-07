@@ -150,6 +150,7 @@ class LocalDataSource(DataSource):
         """
         datafile_path = os.path.join(self.local_data_path, series_name)
         data = read_data(datafile_path)
+        # todo: compress
         return data
 
 
