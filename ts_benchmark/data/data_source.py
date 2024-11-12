@@ -7,6 +7,7 @@ from typing import Optional, Dict, NoReturn, List
 import pandas as pd
 
 from ts_benchmark.common.constant import FORECASTING_DATASET_PATH
+from ts_benchmark.data.data_compressor import DataCompressor
 from ts_benchmark.data.dataset import Dataset
 from ts_benchmark.data.utils import load_series_info, read_data
 
@@ -68,6 +69,7 @@ class LocalDataSource(DataSource):
 
     #: index column name of the metadata
     _INDEX_COL = "file_name"
+    compressor: DataCompressor = None
 
     def __init__(self, local_data_path: str, metadata_file_name: str):
         """
@@ -82,6 +84,7 @@ class LocalDataSource(DataSource):
         self.local_data_path = local_data_path
         self.metadata_path = os.path.join(local_data_path, metadata_file_name)
         metadata = self.update_meta_index()
+        self.compressor = DataCompressor()
         super().__init__({}, metadata)
 
     def update_meta_index(self) -> pd.DataFrame:
@@ -150,8 +153,10 @@ class LocalDataSource(DataSource):
         """
         datafile_path = os.path.join(self.local_data_path, series_name)
         data = read_data(datafile_path)
-        # todo: compress
-        return data
+
+        # Compression step
+        modulo = 10
+        return self.compressor.regular_removal(data, modulo)
 
 
 class LocalForecastingDataSource(LocalDataSource):
