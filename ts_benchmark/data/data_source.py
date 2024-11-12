@@ -155,8 +155,8 @@ class LocalDataSource(DataSource):
         data = read_data(datafile_path)
 
         # Compression step
-        modulo = 10
-        return self.compressor.regular_removal(data, modulo)
+        modulo = 2
+        return self.compressor.regular_removal(data, modulo, True)
 
 
 class LocalForecastingDataSource(LocalDataSource):
