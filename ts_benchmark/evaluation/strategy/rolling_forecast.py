@@ -13,6 +13,7 @@ from ts_benchmark.evaluation.strategy.forecasting import ForecastingStrategy
 from ts_benchmark.models import ModelFactory
 from ts_benchmark.models.model_base import BatchMaker, ModelBase
 from ts_benchmark.utils.data_processing import split_before
+from ts_benchmark.data.data_compressor import DataCompressor
 
 
 class RollingForecastEvalBatchMaker:
@@ -192,6 +193,7 @@ class RollingForecast(ForecastingStrategy):
         :param series_name: the name of the target series.
         :return: The evaluation results.
         """
+        print("using rolling forecast")
         model = model_factory()
         if model.batch_forecast.__annotations__.get("not_implemented_batch"):
             return self._eval_sample(series, meta_info, model, series_name)
@@ -292,6 +294,15 @@ class RollingForecast(ForecastingStrategy):
         :param series_name: The name of the target series.
         :return: The evaluation results.
         """
+        print("eval batch")
+
+        # Compression step
+        print("\nCompressing dataset...")
+        modulo = 1
+        compressed_series = DataCompressor().regular_preserve(series, modulo)
+        print(f"=> Original data size: {len(series)}")
+        print(f"=> Compressed data size: {len(compressed_series)}\n")
+
         stride = self._get_scalar_config_value("stride", series_name)
         horizon = self._get_scalar_config_value("horizon", series_name)
         num_rollings = self._get_scalar_config_value("num_rollings", series_name)
@@ -302,7 +313,10 @@ class RollingForecast(ForecastingStrategy):
         tv_ratio = self._get_scalar_config_value("tv_ratio", series_name)
 
         train_length, test_length = self._get_split_lens(series, meta_info, tv_ratio)
-        train_valid_data, test_data = split_before(series, train_length)
+
+        # Use compressed data as training data
+        #train_valid_data, test_data = split_before(series, train_length)
+        train_valid_data = compressed_series
 
         start_fit_time = time.time()
         fit_method = model.forecast_fit if hasattr(model, "forecast_fit") else model.fit
