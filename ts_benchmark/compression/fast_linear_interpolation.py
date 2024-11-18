@@ -88,7 +88,7 @@ class FastLinearInterpolation:
 
         index: int = self._getIndexRead(t);
         model = self.listOldModels[index];
-        return self._getValue(t, model.item1, model.item3, model.item2)
+        return self._getValue(t, model[0], model[2], model[1])
 
     def _getIndexRead(self, t: float) -> int:
         minIndex: int = 0
@@ -102,11 +102,11 @@ class FastLinearInterpolation:
             if minIndex == maxIndex:
                 break
 
-            tIndex = self.listOldModels[index].item1
+            tIndex = self.listOldModels[index][0]
             if t == tIndex:
                 break
 
-            if t > tIndex and t < self.listOldModels[index + 1].item1:
+            if t > tIndex and t < self.listOldModels[index + 1][0]:
                 break
 
             if t < tIndex:
