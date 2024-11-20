@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 from numpy.lib.stride_tricks import sliding_window_view
 
+from ts_benchmark.compression.compression_data_frame import CompressionDataFrame
 from ts_benchmark.evaluation.metrics import regression_metrics
 from ts_benchmark.evaluation.strategy.constants import FieldNames
 from ts_benchmark.evaluation.strategy.forecasting import ForecastingStrategy
@@ -294,14 +295,6 @@ class RollingForecast(ForecastingStrategy):
         :param series_name: The name of the target series.
         :return: The evaluation results.
         """
-        print("eval batch")
-
-        # Compression step
-        print("\nCompressing dataset...")
-        modulo = 1
-        compressed_series = DataCompressor().regular_preserve(series, modulo)
-        print(f"=> Original data size: {len(series)}")
-        print(f"=> Compressed data size: {len(compressed_series)}\n")
 
         stride = self._get_scalar_config_value("stride", series_name)
         horizon = self._get_scalar_config_value("horizon", series_name)
@@ -313,10 +306,30 @@ class RollingForecast(ForecastingStrategy):
         tv_ratio = self._get_scalar_config_value("tv_ratio", series_name)
 
         train_length, test_length = self._get_split_lens(series, meta_info, tv_ratio)
+        train_valid_data, test_data = split_before(series, train_length)
 
-        # Use compressed data as training data
-        #train_valid_data, test_data = split_before(series, train_length)
-        train_valid_data = compressed_series
+
+        #################################################################################
+        # COMPRESSION
+        #################################################################################
+
+        print("\nCompressing dataset...")
+
+        modulo = 10
+        # train_valid_data = DataCompressor().regular_removal(train_valid_data, modulo, True)
+        train_valid_data = DataCompressor().regular_preserve(train_valid_data, modulo)
+
+        #################################################################################
+
+        # train_valid_data = CompressionDataFrame(train_valid_data)
+        # error = 0.5
+        # train_valid_data.compress(error)
+        print(f"=> Original data size: {len(train_valid_data)}")
+        print(f"=> Compressed data size: {len(train_valid_data)}\n")
+
+        #################################################################################
+        #################################################################################
+
 
         start_fit_time = time.time()
         fit_method = model.forecast_fit if hasattr(model, "forecast_fit") else model.fit
