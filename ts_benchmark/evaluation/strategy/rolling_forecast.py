@@ -315,15 +315,15 @@ class RollingForecast(ForecastingStrategy):
 
         print("\nCompressing dataset...")
 
-        modulo = 10
+        #modulo = 10
         # train_valid_data = DataCompressor().regular_removal(train_valid_data, modulo, True)
-        train_valid_data = DataCompressor().regular_preserve(train_valid_data, modulo)
+        #train_valid_data = DataCompressor().regular_preserve(train_valid_data, modulo)
 
         #################################################################################
 
-        # train_valid_data = CompressionDataFrame(train_valid_data)
-        # error = 0.5
-        # train_valid_data.compress(error)
+        train_valid_data = CompressionDataFrame(train_valid_data)
+        error = 0.00001
+        train_valid_data.compress(error)
         print(f"=> Original data size: {len(train_valid_data)}")
         print(f"=> Compressed data size: {len(train_valid_data)}\n")
 

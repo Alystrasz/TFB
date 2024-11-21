@@ -25,6 +25,17 @@ def draw_regular_preserve_results():
     plt.plot(perserved_counts, rmse)
     fig.savefig("accuracy_on_regular_preserve.pdf", bbox_inches='tight')
 
+def draw_fli_results():
+    perserved_counts = [0, 0.00001, 0.0001, 0.001, 0.01, 0.1, 0.2, 0.3]
+    rmse = [0.6314634158482261, 0.6314634158482261, 0.6314601515947191, 0.6323395909646431, 0.665219421710249, 1.040324541439869, 8.737359548164513, 2.8089075574997477]
+
+    fig = plt.figure()
+    plt.title("Accuracy of M model regarding FLI compression")
+    plt.ylabel('RMSE')
+    plt.xlabel('Tolerated error')
+    plt.plot(perserved_counts, rmse)
+    fig.savefig("accuracy_on_fli.pdf", bbox_inches='tight')
+
 def draw_linear_results():
     tolerated_errors = [x / 100.0 for x in range(0, 110, 10)]
     accuracies = [x / 100.0 for x in range(100, 45, -5)]
@@ -39,3 +50,4 @@ def draw_linear_results():
 draw_removal_results()
 draw_linear_results()
 draw_regular_preserve_results()
+draw_fli_results()
