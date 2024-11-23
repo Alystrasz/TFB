@@ -26,6 +26,26 @@ def draw_regular_preserve_results():
     fig.savefig("accuracy_on_regular_preserve.pdf", bbox_inches='tight')
 
 def draw_fli_results():
+    results = [
+        {"error":0.0001,"samples_original_count":12098170, "model_floats_count":35129874, "rmse":0.6314601515947191},
+        {"error":0.0002,"samples_original_count":12098170, "model_floats_count":34259349, "rmse":0.631481042189687},
+        {"error":0.0004,"samples_original_count":12098170, "model_floats_count":32712252, "rmse":0.6315406494236255},
+        {"error":0.0008,"samples_original_count":12098170, "model_floats_count":29821938, "rmse":0.6320992325480655},
+        {"error":0.0016,"samples_original_count":12098170, "model_floats_count":25214850, "rmse":0.6334837751323967},
+        {"error":0.0032,"samples_original_count":12098170, "model_floats_count":19382682, "rmse":0.6382794062990357},
+        {"error":0.0064,"samples_original_count":12098170, "model_floats_count":13857987, "rmse":0.6494726311684359},
+        {"error":0.0128,"samples_original_count":12098170, "model_floats_count":9462975, "rmse":0.6782594614475053},
+        {"error":0.0256,"samples_original_count":12098170, "model_floats_count":6243417, "rmse":0.7199984145389016},
+        {"error":0.0512,"samples_original_count":12098170, "model_floats_count":3668571, "rmse":0.7957877478250986},
+        {"error":0.1024,"samples_original_count":12098170, "model_floats_count":1689576, "rmse":1.0329479126754864},
+        {"error":0.2048,"samples_original_count":12098170, "model_floats_count":480936, "rmse":3.5305682447298268},
+        {"error":0.4096,"samples_original_count":12098170, "model_floats_count":18288, "rmse":13.295452571302976},
+        {"error":0.8192,"samples_original_count":12098170, "model_floats_count":2586, "rmse":97.09020836411514},
+        {"error":1.6384,"samples_original_count":12098170, "model_floats_count":2586, "rmse":97.09020836411514},
+        {"error":3.2768,"samples_original_count":12098170, "model_floats_count":2586, "rmse":97.09020836411514},
+        {"error":6.5536,"samples_original_count":12098170, "model_floats_count":2586, "rmse":97.09020836411514},
+        {"error":13.1072,"samples_original_count":12098170, "model_floats_count":2586, "rmse":97.09020836411514}
+    ]
     perserved_counts = [0, 0.00001, 0.0001, 0.0002, 0.0005, 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.3]
     rmse = [0.6314634158482261, 0.6314634158482261, 0.6314601515947191, 0.6314810423140886, 0.6316329905267445, 0.6323395909646431, 0.6347552157794631, 0.6442626782795469, 0.665219421710249, 0.7174913415079524, 0.8081353280563366, 1.040324541439869, 8.737359548164513, 2.8089075574997477]
 
