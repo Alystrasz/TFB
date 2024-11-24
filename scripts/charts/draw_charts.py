@@ -52,8 +52,14 @@ def draw_fli_results():
     fig = plt.figure()
     plt.title("Accuracy of M model regarding FLI compression")
     plt.ylabel('RMSE')
-    plt.xlabel('Tolerated error')
-    plt.plot(perserved_counts, rmse)
+    plt.xlabel('Compression rate')
+    # plt.plot(perserved_counts, rmse)
+
+    # todo: divide model floats count by columns count
+    compression_ratios = [r["samples_original_count"] / r["model_floats_count"] for r in results]
+    rmses = [r["rmse"] for r in results]
+    plt.plot(compression_ratios, rmses)
+
     fig.savefig("accuracy_on_fli.pdf", bbox_inches='tight')
 
 def draw_linear_results():
