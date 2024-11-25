@@ -5,11 +5,13 @@ from typing import List, Optional
 import numpy as np
 import pandas as pd
 
+from ts_benchmark.compression.compression_data_frame import CompressionDataFrame
 from ts_benchmark.evaluation.metrics import regression_metrics
 from ts_benchmark.evaluation.strategy.constants import FieldNames
 from ts_benchmark.evaluation.strategy.forecasting import ForecastingStrategy
 from ts_benchmark.models import ModelFactory
 from ts_benchmark.utils.data_processing import split_before
+from ts_benchmark.data.data_compressor import DataCompressor
 
 
 class FixedForecast(ForecastingStrategy):
@@ -61,6 +63,19 @@ class FixedForecast(ForecastingStrategy):
             raise ValueError("The prediction step exceeds the data length")
 
         train_valid_data, test_data = split_before(series, train_length)
+
+        #################################################################################
+        # COMPRESSION
+        #################################################################################
+
+        # modulo = 7
+        # train_valid_data = DataCompressor().regular_preserve(train_valid_data, modulo)
+        train_valid_data = CompressionDataFrame(train_valid_data)
+        train_valid_data.compress_with_threshold(0.9)
+
+        #################################################################################
+        #################################################################################
+
         start_fit_time = time.time()
         fit_method = model.forecast_fit if hasattr(model, "forecast_fit") else model.fit
         fit_method(train_valid_data, train_ratio_in_tv=train_ratio_in_tv)
