@@ -40,6 +40,8 @@ class CompressionDataFrame(pd.DataFrame):
                     # todo: fix
                     print(f"todo: fix failing add for [{value}]{index, r}")
             self.models[value] = model
+            self.rawValuesCount += len(self)
+            self.modelsCount += len(model.listOldModels)
 
         # reattribute values
         for value in self.columns.values:
