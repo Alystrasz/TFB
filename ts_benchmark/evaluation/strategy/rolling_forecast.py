@@ -322,10 +322,11 @@ class RollingForecast(ForecastingStrategy):
         #################################################################################
 
         train_valid_data = CompressionDataFrame(train_valid_data)
-        error = 0.00001
+        error = 0.0001 * 512 * 256
         train_valid_data.compress(error)
         print(f"=> Original data size: {len(train_valid_data)}")
         print(f"=> Compressed data size: {len(train_valid_data)}\n")
+        train_valid_data.print_compression_rate()
 
         #################################################################################
         #################################################################################

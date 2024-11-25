@@ -11,6 +11,9 @@ class CompressionDataFrame(pd.DataFrame):
         super(CompressionDataFrame,  self).__init__(*args, **kwargs)
         self.fli = FastLinearInterpolation()
         self.models = {}
+        self.rawValuesCount = 0
+        self.modelsCount = 0
+        self.tolerated_error = 0
 
     @property
     def _constructor(self):
@@ -44,8 +47,14 @@ class CompressionDataFrame(pd.DataFrame):
         for value in self.columns.values:
             self[value] = [self.models[value].read(t) for t in timestamps]
 
+    def print_compression_rate(self):
+        # FLI models are made of 3 floating values
+        mvalue = self.modelsCount * 3
+        print(f'{{"error":{self.tolerated_error},"samples_original_count":{self.rawValuesCount}, "model_floats_count":{mvalue}}}')
+
     def compress(self, tolerated_error):
         print(self.head())
+        self.tolerated_error = tolerated_error
 
         timestamps = [datetime.timestamp(ciso8601.parse_datetime(str(t))) for t in self.index]
         for value in self.columns.values:
@@ -59,6 +68,8 @@ class CompressionDataFrame(pd.DataFrame):
                     print(f"todo: fix failing add for [{value}]{index, r}")
             self.models[value] = model
             print(f"=> Column {value} stored in FLI model.")
+            self.rawValuesCount += len(self)
+            self.modelsCount += len(model.listOldModels)
         print("Model conversion done.")
 
         # reattribute values
