@@ -62,6 +62,36 @@ def draw_fli_results():
 
     fig.savefig("accuracy_on_fli.pdf", bbox_inches='tight')
 
+def draw_electricity_fli_results():
+    results = [
+        {"error":1,"samples_original_count":6754803, "model_floats_count":18774477, "mse_norm":0.1400560095826792},
+        {"error":2,"samples_original_count":6754803, "model_floats_count":18055548, "mse_norm": 0.1400963620391163},
+        {"error":4,"samples_original_count":6754803, "model_floats_count":16870407, "mse_norm":0.1403163973194127},
+        {"error":8,"samples_original_count":6754803, "model_floats_count":15072492, "mse_norm": 0.1414036463199564},
+        {"error":16,"samples_original_count":6754803, "model_floats_count":12692997, "mse_norm":0.1447340496104468},
+        {"error":32,"samples_original_count":6754803, "model_floats_count":9946611, "mse_norm":0.152981061418201},
+        {"error":64,"samples_original_count":6754803, "model_floats_count":7253976, "mse_norm":0.1618169963218571},
+        {"error":128,"samples_original_count":6754803, "model_floats_count":4920978, "mse_norm":0.3289230026226734},
+        {"error":256,"samples_original_count":6754803, "model_floats_count":3056589, "mse_norm": 1.5019162730779316},
+        {"error":512,"samples_original_count":6754803, "model_floats_count":1717332, "mse_norm": 22.97868517271081},
+        {"error":1024,"samples_original_count":6754803, "model_floats_count":907434, "mse_norm": 187.3767091010364},
+        {"error":2048,"samples_original_count":6754803, "model_floats_count":470496, "mse_norm":273.93890006586486},
+        {"error":4096,"samples_original_count":6754803, "model_floats_count":230667, "mse_norm":226.3062101857673},
+        {"error":8192,"samples_original_count":6754803, "model_floats_count":109026, "mse_norm":231.14713357149185}
+    ]
+
+    fig = plt.figure()
+    plt.title("Accuracy of M model regarding FLI compression")
+    plt.ylabel('MSE')
+    plt.xlabel('Compression rate')
+
+    # todo: divide model floats count by columns count
+    compression_ratios = [r["samples_original_count"] / r["model_floats_count"] for r in results]
+    rmses = [r["mse_norm"] for r in results]
+    plt.plot(compression_ratios, rmses)
+
+    fig.savefig("accuracy_on_fli_electricity.pdf", bbox_inches='tight')
+
 def draw_linear_results():
     tolerated_errors = [x / 100.0 for x in range(0, 110, 10)]
     accuracies = [x / 100.0 for x in range(100, 45, -5)]
@@ -77,3 +107,4 @@ draw_removal_results()
 draw_linear_results()
 draw_regular_preserve_results()
 draw_fli_results()
+draw_electricity_fli_results()
