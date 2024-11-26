@@ -88,8 +88,21 @@ def draw_electricity_fli_results():
     # todo: divide model floats count by columns count
     compression_ratios = [r["samples_original_count"] / r["model_floats_count"] for r in results]
     rmses = [r["mse_norm"] for r in results]
-    plt.plot(compression_ratios, rmses)
+    plt.plot(compression_ratios, rmses, label="FLI compression")
 
+    mod_preserve_results = [
+        {"mod":1, "mse_norm": 0.1400408994253142},
+        {"mod":2, "mse_norm": 0.920491110781603},
+        {"mod":4, "mse_norm": 0.9105510209692836},
+        {"mod":8, "mse_norm": 1.315408286127259},
+        {"mod":16, "mse_norm": 1.6963558878677505}
+        # crash afterwards
+    ]
+    mod_preserve_ratios = [6754803 / r["mod"] for r in mod_preserve_results]
+    mod_preserve_mses = [r["mse_norm"] for r in mod_preserve_results]
+    plt.plot(mod_preserve_ratios, mod_preserve_mses, label="mod preserve")
+
+    plt.legend()
     fig.savefig("accuracy_on_fli_electricity.pdf", bbox_inches='tight')
 
 def draw_linear_results():
