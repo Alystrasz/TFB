@@ -56,6 +56,7 @@ class CompressionDataFrame(pd.DataFrame):
         print(self.head())
         self.tolerated_error = tolerated_error
 
+        print(self.index[0])
         timestamps = [datetime.timestamp(ciso8601.parse_datetime(str(t))) for t in self.index]
         for value in self.columns.values:
             model = FastLinearInterpolation()
@@ -74,12 +75,12 @@ class CompressionDataFrame(pd.DataFrame):
 
         # reattribute values
         for value in self.columns.values:
+            print('oho')
             self[value] = [self.models[value].read(t) for t in timestamps]
+            print('aha')
         print(self.head())
 
     def compress_test(self, tolerated_error):
-        print(self.head())
-
         data = [(datetime.timestamp(ciso8601.parse_datetime(t)), v) for t, v in zip(self['date'], self['data'])]
         self.fli.setError(tolerated_error)
         for d in data:
@@ -92,7 +93,6 @@ class CompressionDataFrame(pd.DataFrame):
         # reattribute values
         assert self.len() == len(data)
         self['data'] = [self.fli.read(d[0]) for d in data]
-        print(self.head())
 
 
 class DriftBuilder():
@@ -134,15 +134,3 @@ class DriftBuilder():
             errors.append(np.percentile(drifts, percentile * 100))
         
         return errors
-
-
-#---- self test code
-if __name__ == "__main__":
-    compressed_series = CompressionDataFrame.read_csv('dataset/forecasting/PEMS-BAY.csv')
-    print(f"Compressed series length: {compressed_series.len()}")
-
-    # Compress with tolerated error
-    #error = 0.5
-    #compressed_series.compress_test(error)
-
-    compressed_series.compress_with_threshold()
